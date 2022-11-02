@@ -29,7 +29,7 @@ const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   console.log({
     publicKey: keypair.publicKey,
-    privateKey: keypair.privateKey,
+    privateKey: keypair.secretKey,
     signature: airdropSignature,
     txn
   })
