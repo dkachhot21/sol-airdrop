@@ -1,16 +1,36 @@
-const {connection, clusterApiUrl, LAMPORTS_PER_SOL} = require("@solana/web3.js");
-const connection = new Connection(clusterApiUrl("devnet"),"confirmed");
+// npm init
+// npm install --save @solana/web3.js
 
-(async ()=>{
-    const airdropSignature = await connection.requestAirdrop(
-        'DhLmna9a2ZG5eagBPhikhkAMrD2SdHA718XywrGP7R7S',
-        LAMPORTS_PER_SOL
-    );
-    const latestBlockHash = await connecction.getLatestBlockhash();
+const { 
+  Connection, 
+  LAMPORTS_PER_SOL, 
+  clusterApiUrl, 
+  Keypair
+} = require("@solana/web3.js");
 
-    await connection.confirmTransaction({
-      blockhash: latestBlockHash.blockhash,
-      lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-      signature: airdropSignature,
-    });
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+
+(async ()=> {
+
+  const keypair = Keypair.generate();
+
+  const airdropSignature = await connection.requestAirdrop(
+    keypair.publicKey,
+    LAMPORTS_PER_SOL
+  );
+  
+  const latestBlockHash = await connection.getLatestBlockhash();
+  
+  const txn = await connection.confirmTransaction({
+    blockhash: latestBlockHash.blockhash,
+    lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+    signature: airdropSignature,
+  });
+
+  console.log({
+    publicKey: keypair.publicKey,
+    privateKey: keypair.privateKey,
+    signature: airdropSignature,
+    txn
+  })
 })()
